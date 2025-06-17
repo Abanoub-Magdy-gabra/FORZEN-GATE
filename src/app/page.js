@@ -1,4 +1,3 @@
-// App.js or index.js
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
@@ -6,7 +5,6 @@ import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Nav';
 import Home from './components/Home';
 import Footer from './components/Footer';
-import PageTransition from './components/PageTransition';
 import Cursor from './components/Cursor';
 import ParallaxBackground from './components/ParallaxBackground';
 import ScrollProgressBar from './components/ScrollProgressBar';
@@ -48,8 +46,11 @@ export default function App() {
   const [pageTransition, setPageTransition] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [cursorEnabled, setCursorEnabled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    setMounted(true);
+    
     // Client-side only code
     if (typeof window !== 'undefined') {
       // Check if not mobile device
@@ -89,6 +90,11 @@ export default function App() {
       };
     }
   }, []);
+
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
   
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
