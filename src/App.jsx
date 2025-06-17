@@ -1,19 +1,22 @@
-"use client";
-
 import React, { useState, useEffect, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Navigation from './components/Nav';
-import Home from './components/Home';
-import Footer from './components/Footer';
+import Home from './pages/Home';
+import About from './pages/About';
+import Products from './pages/Products';
+import Agronomy from './pages/Agronomy';
+import Quality from './pages/Quality';
+import Process from './pages/Process';
+import Contact from './pages/Contact';
 import Cursor from './components/Cursor';
 import ParallaxBackground from './components/ParallaxBackground';
 import ScrollProgressBar from './components/ScrollProgressBar';
-import "@fontsource/montserrat"; // Defaults to weight 400
-import "@fontsource/montserrat/400.css"; // Specify weight
-import "@fontsource/montserrat/500.css"; // Specify weight
-import "@fontsource/montserrat/600.css"; // Specify weight
-import "@fontsource/montserrat/700.css"; // Specify weight
-import "@fontsource/montserrat/900.css"; // Specify weight
+import "@fontsource/montserrat";
+import "@fontsource/montserrat/400.css";
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/600.css";
+import "@fontsource/montserrat/700.css";
+import "@fontsource/montserrat/900.css";
 import "@fontsource/montserrat/400-italic.css";
 
 // Loading spinner component
@@ -51,59 +54,51 @@ export default function App() {
   useEffect(() => {
     setMounted(true);
     
-    // Client-side only code
-    if (typeof window !== 'undefined') {
-      // Check if not mobile device
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      setCursorEnabled(!isMobile);
-      
-      // Simulate initial loading
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-        // After loading, start page transition
-        setTimeout(() => {
-          setPageTransition(true);
-        }, 100);
-      }, 2000);
-      
-      const handleScroll = () => {
-        if (window.scrollY > 300) {
-          setShowScrollTop(true);
-        } else {
-          setShowScrollTop(false);
-        }
-      };
-      
-      window.addEventListener('scroll', handleScroll);
-      
-      // Add class to body to hide cursor
-      if (!isMobile && typeof document !== 'undefined') {
-        document.body.classList.add('custom-cursor');
+    // Check if not mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    setCursorEnabled(!isMobile);
+    
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      // After loading, start page transition
+      setTimeout(() => {
+        setPageTransition(true);
+      }, 100);
+    }, 2000);
+    
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
       }
-      
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-        clearTimeout(timer);
-        if (typeof document !== 'undefined') {
-          document.body.classList.remove('custom-cursor');
-        }
-      };
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Add class to body to hide cursor
+    if (!isMobile) {
+      document.body.classList.add('custom-cursor');
     }
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+      document.body.classList.remove('custom-cursor');
+    };
   }, []);
-
-  // Don't render anything until mounted to prevent hydration mismatch
-  if (!mounted) {
-    return null;
-  }
   
   const scrollToTop = () => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
+
+  if (!mounted) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -117,15 +112,19 @@ export default function App() {
           <ParallaxBackground>
             <div className={`min-h-screen overflow-x-hidden transition-opacity duration-700 ease-in-out ${pageTransition ? 'opacity-100' : 'opacity-0'}`}>
               <div className="flex flex-col min-h-screen">
-                <Navigation />
-                
-                <main className="flex-grow pt-[10vh] transition-all duration-700 ease-in-out">
+                <main className="flex-grow">
                   <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-                    <Home />
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/ProductsPage" element={<Products />} />
+                      <Route path="/Agronomy" element={<Agronomy />} />
+                      <Route path="/Quality" element={<Quality />} />
+                      <Route path="/Process" element={<Process />} />
+                      <Route path="/Contact" element={<Contact />} />
+                    </Routes>
                   </Suspense>
                 </main>
-
-                <Footer className="mt-auto" />
               </div>
               
               {/* Scroll to top button */}

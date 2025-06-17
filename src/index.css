@@ -49,13 +49,6 @@
   --z-overlay: 1000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;

@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,7 +17,7 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
+  const location = useLocation();
 
   // Set mounted state to true after component mounts to avoid hydration mismatch
   useEffect(() => {
@@ -30,12 +28,12 @@ const Navigation = () => {
     setIsOpen(!isOpen);
     
     // Prevent scrolling when menu is open
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = !isOpen ? 'hidden' : '';
-    }
+    document.body.style.overflow = !isOpen ? 'hidden' : '';
   };
 
   useEffect(() => {
+    if (!mounted) return;
+    
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
@@ -48,15 +46,15 @@ const Navigation = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [scrolled]);
+  }, [scrolled, mounted]);
 
   // Close menu when route changes and restore scrolling
   useEffect(() => {
+    if (!mounted) return;
+    
     setIsOpen(false);
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
-    }
-  }, [pathname]);
+    document.body.style.overflow = '';
+  }, [location.pathname, mounted]);
 
   // Animation variants for menu items
   const menuItemVariants = {
@@ -67,7 +65,7 @@ const Navigation = () => {
       transition: {
         delay: i * 0.1,
         duration: 0.5,
-        ease: "easeOut" // Fixed the cubic-bezier issue
+        ease: "easeOut"
       }
     })
   };
@@ -99,15 +97,12 @@ const Navigation = () => {
       <nav className="fixed top-0 left-0 w-full px-[5%] flex items-center justify-between z-[1000] bg-white/95 h-[10vh]">
         <div className="w-8 h-8"></div>
         <div className="h-[100px] flex items-center justify-center">
-          <Link href="/" className="transition-all duration-300 transform hover:scale-105">
+          <Link to="/" className="transition-all duration-300 transform hover:scale-105">
             <div className="relative w-[160px] h-[62px] lg:w-[220px] lg:h-[85px]">
-              <Image 
+              <img 
                 src="/images/Frozengate-01.svg"
                 alt="Frozengate Logo" 
-                fill
-                priority
-                sizes="(max-width: 768px) 160px, 220px"
-                className="object-contain drop-shadow-sm"
+                className="w-full h-full object-contain drop-shadow-sm"
                 style={{ 
                   maxWidth: '100%'
                 }}
@@ -127,9 +122,9 @@ const Navigation = () => {
           ].map((item, index) => (
             <li key={index} className="text-left">
               <Link 
-                href={item.path} 
+                to={item.path} 
                 className={`font-montserrat relative inline-block group transition-colors duration-300 px-3 py-2
-                  ${pathname === item.path 
+                  ${location.pathname === item.path 
                     ? 'text-primary font-semibold' 
                     : 'text-black hover:text-primary'
                   }
@@ -138,7 +133,7 @@ const Navigation = () => {
               >
                 <span className="relative z-10">{item.label}</span>
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-primary transform 
-                  ${pathname === item.path ? 'scale-x-100' : 'scale-x-0'} 
+                  ${location.pathname === item.path ? 'scale-x-100' : 'scale-x-0'} 
                   transition-transform duration-500 ease-in-out`}>
                 </span>
               </Link>
@@ -183,36 +178,32 @@ const Navigation = () => {
         ${scrolled ? 'h-[70px]' : 'h-[110px]'}
         absolute left-1/2 transform -translate-x-1/2 lg:static lg:translate-x-0
       `}>
-        <Link href="/" className="relative group">
+        <Link to="/" className="relative group">
           <motion.div
             className="absolute inset-0 bg-primary/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"
             initial={false}
             animate={{ scale: 0 }}
             whileHover={{ scale: 1.2 }}
           />
-      <motion.div 
+          <motion.div 
             className={`
               relative
               ${scrolled ? 'w-[130px] h-[50px] lg:w-[160px] lg:h-[62px]' : 'w-[160px] h-[62px] lg:w-[220px] lg:h-[85px]'}
               transition-all duration-300
             `}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             whileHover={{ 
               scale: 1.05,
               filter: "drop-shadow(0px 4px 6px rgba(95, 180, 70, 0.25))"
             }}
-      >
-            <Image 
-            src="/images/Frozengate-01.svg"
-            alt="Frozengate Logo" 
-              fill
-              priority
-              sizes="(max-width: 768px) 160px, 220px"
-              className="object-contain drop-shadow-md relative z-10"
-              quality={90}
-          />
+          >
+            <img 
+              src="/images/Frozengate-01.svg"
+              alt="Frozengate Logo" 
+              className="w-full h-full object-contain drop-shadow-md relative z-10"
+            />
           </motion.div>
         </Link>
       </div>
@@ -244,9 +235,9 @@ const Navigation = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              href={item.path} 
+              to={item.path} 
               className={`font-montserrat relative inline-block group transition-colors duration-300 px-3 py-2
-                ${pathname === item.path 
+                ${location.pathname === item.path 
                   ? 'text-primary font-semibold' 
                   : 'text-black hover:text-primary'
                 }
@@ -257,7 +248,7 @@ const Navigation = () => {
               <span 
                 className={`
                   absolute bottom-0 left-0 w-full h-0.5 bg-primary transform 
-                  ${pathname === item.path 
+                  ${location.pathname === item.path 
                     ? 'scale-x-100 opacity-100 nav-underline-active' 
                     : 'scale-x-0 opacity-0 origin-right group-hover:scale-x-100 group-hover:opacity-100 group-hover:origin-left'
                   } 
@@ -267,7 +258,7 @@ const Navigation = () => {
                   after:duration-300 group-hover:after:opacity-100
                 `}
                 style={{
-                  boxShadow: pathname === item.path ? '0 0 8px 1px rgba(95,180,70,0.5)' : 'none'
+                  boxShadow: location.pathname === item.path ? '0 0 8px 1px rgba(95,180,70,0.5)' : 'none'
                 }}
               >
               </span>
@@ -293,11 +284,10 @@ const Navigation = () => {
               transition={{ delay: 0.2 }}
             >
               <div className="relative w-[120px] h-[47px]">
-                <Image 
+                <img 
                   src="/images/Frozengate-01.svg"
                   alt="Frozengate Logo" 
-                  fill
-                  className="object-contain opacity-10"
+                  className="w-full h-full object-contain opacity-10"
                 />
               </div>
             </motion.div>
@@ -322,9 +312,9 @@ const Navigation = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link 
-                    href={item.path} 
+                    to={item.path} 
                     className={`font-montserrat relative inline-block group transition-colors duration-300 px-4 py-3 text-xl
-                      ${pathname === item.path 
+                      ${location.pathname === item.path 
                         ? 'text-primary font-semibold' 
                         : 'text-black hover:text-primary'
                       }
@@ -335,7 +325,7 @@ const Navigation = () => {
                     <span 
                       className={`
                         absolute bottom-0 left-0 w-full h-0.5 bg-primary transform 
-                        ${pathname === item.path 
+                        ${location.pathname === item.path 
                           ? 'scale-x-100 opacity-100 nav-underline-active' 
                           : 'scale-x-0 opacity-0 origin-right group-hover:scale-x-100 group-hover:opacity-100 group-hover:origin-left'
                         } 
