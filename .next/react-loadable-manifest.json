@@ -1,1 +1,20 @@
-{}
+{
+  "app/page.js -> ./components/Cursor": {
+    "id": "app/page.js -> ./components/Cursor",
+    "files": [
+      "static/chunks/_app-pages-browser_src_app_components_Cursor_js.js"
+    ]
+  },
+  "app/page.js -> ./components/ParallaxBackground": {
+    "id": "app/page.js -> ./components/ParallaxBackground",
+    "files": [
+      "static/chunks/_app-pages-browser_src_app_components_ParallaxBackground_js.js"
+    ]
+  },
+  "app/page.js -> ./components/ScrollProgressBar": {
+    "id": "app/page.js -> ./components/ScrollProgressBar",
+    "files": [
+      "static/chunks/_app-pages-browser_src_app_components_ScrollProgressBar_js.js"
+    ]
+  }
+}

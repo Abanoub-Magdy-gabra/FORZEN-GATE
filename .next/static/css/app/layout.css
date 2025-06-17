@@ -579,6 +579,12 @@ video {
 .container {
   width: 100%;
 }
+@media (min-width: 375px) {
+
+  .container {
+    max-width: 375px;
+  }
+}
 @media (min-width: 640px) {
 
   .container {
@@ -607,6 +613,18 @@ video {
 
   .container {
     max-width: 1536px;
+  }
+}
+@media (min-width: 1920px) {
+
+  .container {
+    max-width: 1920px;
+  }
+}
+@media (min-width: 2560px) {
+
+  .container {
+    max-width: 2560px;
   }
 }
 .glass-effect {
@@ -681,8 +699,8 @@ video {
 .bottom-0 {
   bottom: 0px;
 }
-.bottom-3 {
-  bottom: 0.75rem;
+.bottom-2 {
+  bottom: 0.5rem;
 }
 .bottom-4 {
   bottom: 1rem;
@@ -1022,9 +1040,6 @@ video {
 .w-20 {
   width: 5rem;
 }
-.w-24 {
-  width: 6rem;
-}
 .w-3 {
   width: 0.75rem;
 }
@@ -1123,6 +1138,9 @@ video {
 }
 .flex-shrink-0 {
   flex-shrink: 0;
+}
+.shrink {
+  flex-shrink: 1;
 }
 .flex-grow {
   flex-grow: 1;
@@ -1725,9 +1743,6 @@ video {
 .font-montserrat {
     font-family: "Montserrat", sans-serif;
   }
-.perspective-1000 {
-    perspective: 1000px;
-  }
 .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
@@ -2082,11 +2097,6 @@ button:active:after, .button:active:after {
   .md\:text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
-  }
-
-  .md\:text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
   }
 
   .md\:text-xs {
